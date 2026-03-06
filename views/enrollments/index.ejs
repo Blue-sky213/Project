@@ -1,107 +1,84 @@
 <%- include('../partials/header') %>
-
-<div class="container mt-4">
-
-<div class="card shadow rounded-4">
-
-<div class="card-body">
-
-<h3>Enrollments</h3>
-
-<a href="/enrollments/create" class="btn btn-primary mb-3">
-Add Enrollment
-</a>
-
-<table class="table table-striped">
-
-<thead>
-<tr>
-<th>ID</th>
-<th>Member</th>
-<th>Class</th>
-<th>Status</th>
-<th>Action</th>
-</tr>
-</thead>
-
-<tbody>
-
-<% enrollments.forEach(e => { %>
-
-<tr>
-
-<td><%= e.enrollment_code %></td>
-
-<td><%= e.User.username %></td>
-
-<td><%= e.Class.className %></td>
-
-<td><%= e.status %></td>
-
-<td>
-
-<a href="/enrollments/<%= e.id %>" class="btn btn-info btn-sm">
-View
-</a>
-
-<a href="/enrollments/<%= e.id %>/edit" class="btn btn-warning btn-sm">
-Edit
-</a>
-
-<form action="/enrollments/<%= e.id %>/delete" method="POST" style="display:inline;">
-
-<button class="btn btn-danger btn-sm deleteBtn">
-Delete
-</button>
-
-</form>
-
-</td>
-
-</tr>
-
-<% }) %>
-
-</tbody>
-
-</table>
-
-</div>
-
-</div>
-
-</div>
-
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<div class="container mt-5">
+    <div class="row mb-4 align-items-center">
+        <div class="col">
+            <h2 class="fw-bold text-dark"><i class="bi bi-card-checklist text-primary"></i> จัดการลงทะเบียนเรียน (Enrollments)</h2>
+        </div>
+        <div class="col-auto text-end">
+            <a href="/enrollments/create" class="btn btn-success shadow-sm"><i class="bi bi-plus-circle"></i> เพิ่มการลงทะเบียน</a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0 align-middle text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th class="py-3">รหัสลงทะเบียน</th>
+                        <th class="py-3 text-start">ชื่อสมาชิก (Member)</th>
+                        <th class="py-3 text-start">คลาสเรียน (Class)</th>
+                        <th class="py-3">สถานะ</th>
+                        <th class="py-3">การจัดการ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (enrollments && enrollments.length > 0) { %>
+                        <% enrollments.forEach(e => { %>
+                            <tr>
+                                <td class="fw-bold text-secondary"><%= e.enrollment_code %></td>
+                                <td class="text-start fw-bold text-primary"><%= e.User.username %></td>
+                                <td class="text-start"><%= e.Class.className %></td>
+                                <td>
+                                    <% if (e.status === 'active') { %>
+                                        <span class="badge bg-success px-3 py-2">Active</span>
+                                    <% } else { %>
+                                        <span class="badge bg-danger px-3 py-2">Cancelled</span>
+                                    <% } %>
+                                </td>
+                                <td>
+                                    <div class="btn-group shadow-sm">
+                                        <a href="/enrollments/<%= e.id %>" class="btn btn-sm btn-info text-white" title="ดูรายละเอียด"><i class="bi bi-search"></i></a>
+                                        <a href="/enrollments/<%= e.id %>/edit" class="btn btn-sm btn-warning" title="แก้ไข"><i class="bi bi-pencil"></i></a>
+                                        <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete('<%= e.id %>', '<%= e.enrollment_code %>')" title="ลบ"><i class="bi bi-trash"></i></button>
+                                        
+                                        <form id="delete-form-<%= e.id %>" action="/enrollments/<%= e.id %>/delete" method="POST" style="display: none;"></form>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="5" class="text-center py-5 text-muted">
+                                <i class="bi bi-inbox fs-1 d-block mb-2"></i> ยังไม่มีข้อมูลการลงทะเบียน
+                            </td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 <script>
-
-document.querySelectorAll('.deleteBtn').forEach(btn => {
-
-btn.addEventListener('click', function(e){
-
-e.preventDefault()
-
-Swal.fire({
-
-title:'Delete?',
-text:'Are you sure?',
-icon:'warning',
-showCancelButton:true
-
-}).then(result => {
-
-if(result.isConfirmed){
-
-this.closest("form").submit()
-
+function confirmDelete(id, code) {
+    Swal.fire({
+        title: 'ยืนยันการลบ?',
+        text: `คุณต้องการลบข้อมูลการลงทะเบียนรหัส ${code} ใช่หรือไม่!`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'ใช่, ลบเลย!',
+        cancelButtonText: 'ยกเลิก',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('delete-form-' + id).submit();
+        }
+    });
 }
-
-})
-
-})
-
-})
-
 </script>
+
+<%- include('../partials/footer') %>

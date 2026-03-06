@@ -1,4 +1,4 @@
-const { Enrollment } = require("../models");
+const Enrollment = require('../models/Enrollment');
 
 module.exports = async () => {
 

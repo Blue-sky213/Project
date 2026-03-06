@@ -1,49 +1,54 @@
-<h2>Edit Enrollment</h2>
+<%- include('../partials/header') %>
 
-<form action="/enrollments/<%=enrollment.id%>?_method=PUT" method="POST">
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-dark text-white p-4 text-center">
+                    <h3 class="mb-0"><i class="bi bi-pencil-square"></i> แก้ไขการลงทะเบียน: <%= enrollment.enrollment_code %></h3>
+                </div>
+                <div class="card-body p-5">
+                    <form action="/enrollments/<%= enrollment.id %>/edit" method="POST">
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-secondary">สมาชิก (Member)</label>
+                            <select class="form-select" name="userId">
+                                <% users.forEach(u => { %>
+                                    <option value="<%= u.id %>" <%= enrollment.userId == u.id ? 'selected' : '' %>>
+                                        <%= u.username %>
+                                    </option>
+                                <% }) %>
+                            </select>
+                        </div>
 
-<select name="userId">
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-secondary">คลาสเรียน (Class)</label>
+                            <select class="form-select" name="classId">
+                                <% classes.forEach(c => { %>
+                                    <option value="<%= c.id %>" <%= enrollment.classId == c.id ? 'selected' : '' %>>
+                                        <%= c.className %>
+                                    </option>
+                                <% }) %>
+                            </select>
+                        </div>
 
-<% users.forEach(u=>{ %>
+                        <div class="mb-5">
+                            <label class="form-label fw-bold text-secondary">สถานะ (Status)</label>
+                            <select class="form-select" name="status">
+                                <option value="active" <%= enrollment.status == "active" ? "selected" : "" %>>Active</option>
+                                <option value="cancelled" <%= enrollment.status == "cancelled" ? "selected" : "" %>>Cancelled</option>
+                            </select>
+                        </div>
 
-<option value="<%=u.id%>"
-<%= enrollment.userId==u.id ? "selected":"" %>>
+                        <div class="d-grid gap-3">
+                            <button type="submit" class="btn btn-warning btn-lg fw-bold shadow-sm">อัปเดตข้อมูล</button>
+                            <a href="/enrollments" class="btn btn-outline-secondary py-2 fw-bold">ยกเลิก</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<%=u.username%>
-
-</option>
-
-<% }) %>
-
-</select>
-
-<select name="classId">
-
-<% classes.forEach(c=>{ %>
-
-<option value="<%=c.id%>"
-<%= enrollment.classId==c.id ? "selected":"" %>>
-
-<%=c.className%>
-
-</option>
-
-<% }) %>
-
-</select>
-
-<select name="status">
-
-<option value="active" <%= enrollment.status=="active"?"selected":""%>>
-active
-</option>
-
-<option value="cancelled" <%= enrollment.status=="cancelled"?"selected":""%>>
-cancelled
-</option>
-
-</select>
-
-<button type="submit">Update</button>
-
-</form>
+<%- include('../partials/footer') %>

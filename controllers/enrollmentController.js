@@ -1,5 +1,6 @@
-const { Enrollment, User, Class } = require("../models");
-
+const Enrollment = require('../models/Enrollment');
+const User = require('../models/User');
+const Class = require('../models/Class');
 
 // =====================
 // INDEX

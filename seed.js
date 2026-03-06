@@ -1,9 +1,8 @@
-// seed.js
 const sequelize = require('./config/database');
 const seedUsers = require('./seeders/userSeeder');
 const seedClasses = require('./seeders/classSeeder');
 const seedPackages = require('./seeders/packageSeeder');
-const User = require('./models/User'); // มั่นใจว่า Import Model มาแล้ว
+const seedEnrollments = require('./seeders/enrollmentSeeder'); // 👈 ดึงไฟล์ของคนที่ 4 มา
 
 const runSeeder = async () => {
     try {
@@ -11,13 +10,14 @@ const runSeeder = async () => {
         await sequelize.authenticate();
         console.log('Database connection established.');
 
-        // 🔥 เพิ่มบรรทัดนี้: เพื่อสร้างตาราง Users ในฐานข้อมูลอัตโนมัติ
         await sequelize.sync({ force: true }); 
         console.log('Database tables created successfully.');
 
+        // 🚨 ลำดับตรงนี้สำคัญมาก ต้องเรียงตามนี้เป๊ะๆ นะครับ
         await seedUsers();
         await seedClasses();
         await seedPackages();
+        await seedEnrollments(); // 👈 ต้องรันเป็นอันสุดท้าย เพราะต้องใช้ข้อมูล User และ Class
 
         console.log('--- Seeding Process Completed ---');
         process.exit(0);

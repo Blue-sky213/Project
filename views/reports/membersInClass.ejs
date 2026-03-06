@@ -1,31 +1,59 @@
-<h2>Members in Class</h2>
+<%- include('../partials/header') %>
 
-<form method="GET">
-<select name="classId">
-<option value="">Select Class</option>
+<div class="container mt-5">
+    <div class="card shadow-sm rounded-4 border-0">
+        <div class="card-header bg-dark text-white p-4">
+            <h3 class="mb-0"><i class="bi bi-file-earmark-bar-graph"></i> รายงาน: รายชื่อสมาชิกในคลาสเรียน</h3>
+        </div>
+        <div class="card-body p-4">
+            <form method="GET" action="/reports/members-in-class" class="row g-3 mb-4">
+                <div class="col-md-8">
+                    <select name="classId" class="form-select form-select-lg">
+                        <option value="">-- เลือกคลาสเรียนที่ต้องการดูรายชื่อ --</option>
+                        <% classes.forEach(c => { %>
+                            <option value="<%= c.id %>" <%= (typeof classId !== 'undefined' && classId == c.id) ? 'selected' : '' %>>
+                                <%= c.className %> (<%= c.scheduleTime %>)
+                            </option>
+                        <% }) %>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary btn-lg w-100"><i class="bi bi-search"></i> ค้นหาข้อมูล</button>
+                </div>
+            </form>
 
-<% classes.forEach(c => { %>
-<option value="<%= c.id %>"><%= c.className %></option>
-<% }) %>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ชื่อสมาชิก</th>
+                            <th>อีเมล</th>
+                            <th class="text-center">สถานะการลงทะเบียน</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (enrollments && enrollments.length > 0) { %>
+                            <% enrollments.forEach(e => { %>
+                                <tr>
+                                    <td class="fw-bold"><%= e.User.username %></td>
+                                    <td><%= e.User.email %></td>
+                                    <td class="text-center">
+                                        <span class="badge <%= e.status === 'active' ? 'bg-success' : 'bg-danger' %>">
+                                            <%= e.status.toUpperCase() %>
+                                        </span>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="3" class="text-center py-4 text-muted">โปรดเลือกคลาสเรียนเพื่อแสดงข้อมูลสมาชิก</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
-</select>
-
-<button type="submit">Search</button>
-</form>
-
-<table border="1">
-<tr>
-<th>Member</th>
-<th>Email</th>
-<th>Status</th>
-</tr>
-
-<% enrollments.forEach(e => { %>
-<tr>
-<td><%= e.User.username %></td>
-<td><%= e.User.email %></td>
-<td><%= e.status %></td>
-</tr>
-<% }) %>
-
-</table>
+<%- include('../partials/footer') %>

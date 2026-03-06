@@ -1,31 +1,60 @@
-<h2>Member Schedule</h2>
+<%- include('../partials/header') %>
 
-<form method="GET">
-<select name="userId">
-<option value="">Select Member</option>
+<div class="container mt-5">
+    <div class="card shadow-sm rounded-4 border-0">
+        <div class="card-header bg-dark text-white p-4">
+            <h3 class="mb-0"><i class="bi bi-calendar-week"></i> รายงาน: ตารางเรียนของสมาชิก</h3>
+        </div>
+        <div class="card-body p-4">
+            
+            <form method="GET" action="/reports/member-schedule" class="row g-3 mb-4">
+                <div class="col-md-8">
+                    <select name="userId" class="form-select form-select-lg">
+                        <option value="">-- เลือกรายชื่อสมาชิก --</option>
+                        <% members.forEach(m => { %>
+                            <option value="<%= m.id %>" <%= (typeof userId !== 'undefined' && userId == m.id) ? 'selected' : '' %>>
+                                <%= m.username %>
+                            </option>
+                        <% }) %>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary btn-lg w-100"><i class="bi bi-search"></i> ค้นหาตารางเรียน</button>
+                </div>
+            </form>
 
-<% members.forEach(m => { %>
-<option value="<%= m.id %>"><%= m.username %></option>
-<% }) %>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-start">คลาสเรียน (Class)</th>
+                            <th>เวลา (Schedule)</th>
+                            <th>สถานะ (Status)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (enrollments && enrollments.length > 0) { %>
+                            <% enrollments.forEach(e => { %>
+                                <tr>
+                                    <td class="text-start fw-bold text-primary"><%= e.Class.className %></td>
+                                    <td><%= e.Class.scheduleTime %></td>
+                                    <td>
+                                        <span class="badge <%= e.status === 'active' ? 'bg-success' : 'bg-danger' %>">
+                                            <%= e.status.toUpperCase() %>
+                                        </span>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="3" class="text-center py-4 text-muted">โปรดเลือกรายชื่อสมาชิกเพื่อดูตารางเรียน</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
-</select>
-
-<button type="submit">Search</button>
-</form>
-
-<table border="1">
-<tr>
-<th>Class</th>
-<th>Schedule</th>
-<th>Status</th>
-</tr>
-
-<% enrollments.forEach(e => { %>
-<tr>
-<td><%= e.Class.className %></td>
-<td><%= e.Class.scheduleTime %></td>
-<td><%= e.status %></td>
-</tr>
-<% }) %>
-
-</table>
+<%- include('../partials/footer') %>

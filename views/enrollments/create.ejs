@@ -1,33 +1,52 @@
-<h2>Create Enrollment</h2>
+<%- include('../partials/header') %>
 
-<form action="/enrollments" method="POST">
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-success text-white p-4 text-center">
+                    <h3 class="mb-0"><i class="bi bi-plus-circle"></i> ลงทะเบียนเรียนใหม่</h3>
+                </div>
+                <div class="card-body p-5">
+                    <form action="/enrollments/create" method="POST">
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-secondary">เลือกสมาชิก (Member) *</label>
+                            <select class="form-select form-select-lg" name="userId" required>
+                                <option value="" disabled selected>-- โปรดเลือกสมาชิก --</option>
+                                <% users.forEach(u => { %>
+                                    <option value="<%= u.id %>"><%= u.username %></option>
+                                <% }) %>
+                            </select>
+                        </div>
 
-<div>
-<label>Member</label>
-<select name="userId">
-<% users.forEach(u=>{ %>
-<option value="<%=u.id%>"><%=u.username%></option>
-<% }) %>
-</select>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-secondary">เลือกคลาสเรียน (Class) *</label>
+                            <select class="form-select form-select-lg" name="classId" required>
+                                <option value="" disabled selected>-- โปรดเลือกคลาสเรียน --</option>
+                                <% classes.forEach(c => { %>
+                                    <option value="<%= c.id %>"><%= c.className %> (<%= c.scheduleTime %>)</option>
+                                <% }) %>
+                            </select>
+                        </div>
+
+                        <div class="mb-5">
+                            <label class="form-label fw-bold text-secondary">สถานะ (Status)</label>
+                            <select class="form-select" name="status">
+                                <option value="active" selected>Active (ใช้งานปกติ)</option>
+                                <option value="cancelled">Cancelled (ยกเลิกแล้ว)</option>
+                            </select>
+                        </div>
+
+                        <div class="d-grid gap-3">
+                            <button type="submit" class="btn btn-success btn-lg fw-bold shadow-sm">บันทึกการลงทะเบียน</button>
+                            <a href="/enrollments" class="btn btn-outline-secondary py-2 fw-bold">ยกเลิก</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div>
-<label>Class</label>
-<select name="classId">
-<% classes.forEach(c=>{ %>
-<option value="<%=c.id%>"><%=c.className%></option>
-<% }) %>
-</select>
-</div>
-
-<div>
-<label>Status</label>
-<select name="status">
-<option value="active">active</option>
-<option value="cancelled">cancelled</option>
-</select>
-</div>
-
-<button type="submit">Create</button>
-
-</form>
+<%- include('../partials/footer') %>

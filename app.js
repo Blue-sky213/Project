@@ -1,13 +1,15 @@
 const express = require('express');
 const path = require('path');
-const methodOverride = require('method-override'); // 👈 1. เพิ่มตัวนี้เข้ามา! (สำคัญมาก)
+const methodOverride = require('method-override');
 const sequelize = require('./config/database');
+
+// --- นำเข้า Routes ของทั้ง 4 คน ---
 const userRoutes = require('./routes/userRoutes');
 const classRoutes = require('./routes/classRoutes');
 const packageRoutes = require('./routes/packageRoutes');
-const userController = require('./controllers/userController'); 
+const enrollmentRoutes = require('./routes/enrollmentRoutes'); // 👈 ของคนที่ 4
 
-const User = require('./models/User'); 
+const userController = require('./controllers/userController'); 
 
 const app = express();
 
@@ -19,7 +21,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(methodOverride('_method')); // 👈 2. เปิดใช้งานการแปลง _method เพื่อให้ปุ่ม PUT/DELETE ทำงานได้
+app.use(methodOverride('_method')); 
 
 // 3. Routes
 
@@ -57,6 +59,8 @@ app.get('/', (req, res) => {
                 .btn-dash { background: #00d2ff; color: white; border: none; }
                 .btn-class { background: #28a745; color: white; border: none; }
                 .btn-package { background: #dc3545; color: white; border: none; }
+                .btn-enroll { background: #6f42c1; color: white; border: none; } /* ปุ่มใหม่ */
+                .btn-report { background: #e83e8c; color: white; border: none; } /* ปุ่มใหม่ */
                 .btn-custom:hover { 
                     transform: translateY(-5px); 
                     box-shadow: 0 8px 20px rgba(0,0,0,0.4); 
@@ -73,7 +77,9 @@ app.get('/', (req, res) => {
                     <a href="/dashboard" class="btn-custom btn-dash">📊 ภาพรวม (Dashboard)</a>
                     <a href="/users" class="btn-custom btn-user">👥 สมาชิก (Users)</a><br>
                     <a href="/classes" class="btn-custom btn-class">📅 คลาสเรียน (Classes)</a>
-                    <a href="/packages" class="btn-custom btn-package">📦 แพ็กเกจ (Packages)</a>
+                    <a href="/packages" class="btn-custom btn-package">📦 แพ็กเกจ (Packages)</a><br>
+                    <a href="/enrollments" class="btn-custom btn-enroll">📝 ลงทะเบียน (Enrollments)</a>
+                    <a href="/reports/members-in-class" class="btn-custom btn-report">📈 รายงาน (Reports)</a>
                 </div>
             </div>
         </body>
@@ -81,12 +87,13 @@ app.get('/', (req, res) => {
     `);
 });
 
-// กำหนด Route หลักให้เป็นระเบียบ (ย้าย packages ลงมารวมตรงนี้)
+// กำหนด Route หลักของทุกคน
 app.use('/users', userRoutes); 
 app.use('/classes', classRoutes);
 app.use('/packages', packageRoutes); 
+app.use('/enrollments', enrollmentRoutes); // 👈 ของคนที่ 4
+app.use('/reports', enrollmentRoutes);     // 👈 ของคนที่ 4
 
-// กำหนด Route สำหรับหน้า Dashboard
 app.get('/dashboard', userController.dashboard);
 
 // 4. Database Sync & Server Start
