@@ -1,65 +1,49 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เพิ่มสมาชิกใหม่ | FitLife Gym</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <style>
-        body { 
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 40px 0;
-        }
-        .create-card {
-            background: rgba(255, 255, 255, 0.95);
-            border: none;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            overflow: hidden;
-        }
-        .create-header {
-            background: #198754; /* สีเขียวแสดงถึงการสร้างใหม่ */
-            color: white;
-            padding: 25px;
-            text-align: center;
-        }
-        .form-label {
-            font-weight: 600;
-            color: #495057;
-            margin-bottom: 8px;
-        }
-        .form-control, .form-select {
-            border-radius: 10px;
-            padding: 12px 15px;
-            border: 1px solid #dee2e6;
-        }
-        .btn-submit {
-            background: #198754;
-            color: white;
-            border-radius: 10px;
-            padding: 12px;
-            font-weight: bold;
-            transition: all 0.3s;
-            border: none;
-        }
-        .btn-submit:hover {
-            background: #146c43;
-            transform: translateY(-2px);
-        }
-    </style>
-</head>
-<body>
+<%- include('../partials/header') %>
 
-<div class="container">
+<style>
+    .create-card {
+        background: rgba(255, 255, 255, 0.95);
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        overflow: hidden;
+    }
+    .create-header {
+        background: #198754; 
+        color: white;
+        padding: 25px;
+        text-align: center;
+    }
+    .form-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 8px;
+    }
+    .form-control, .form-select {
+        border-radius: 10px;
+        padding: 12px 15px;
+        border: 1px solid #dee2e6;
+    }
+    .btn-submit {
+        background: #198754;
+        color: white;
+        border-radius: 10px;
+        padding: 12px;
+        font-weight: bold;
+        transition: all 0.3s;
+        border: none;
+    }
+    .btn-submit:hover {
+        background: #146c43;
+        transform: translateY(-2px);
+    }
+</style>
+
+<div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
             
-            <div class="card create-card">
+            <div class="card create-card animate__animated animate__fadeInUp">
                 <div class="create-header">
                     <h3 class="mb-0"><i class="bi bi-person-plus-fill me-2"></i>เพิ่มสมาชิกใหม่</h3>
                     <p class="mb-0 opacity-75 small mt-1">กรอกข้อมูลเพื่อลงทะเบียนเข้าสู่ระบบ</p>
@@ -72,7 +56,7 @@
                             <label class="form-label text-uppercase small">Username</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light"><i class="bi bi-person"></i></span>
-                                <input type="text" name="username" class="form-control" placeholder="ตั้งชื่อผู้ใช้" required>
+                                <input type="text" name="username" class="form-control" placeholder="ตั้งชื่อผู้ใช้ (3-20 ตัวอักษร)" required>
                             </div>
                         </div>
 
@@ -88,7 +72,7 @@
                             <label class="form-label text-uppercase small">Password</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light"><i class="bi bi-lock"></i></span>
-                                <input type="password" name="password" class="form-control" placeholder="กำหนดรหัสผ่าน" required>
+                                <input type="password" name="password" class="form-control" placeholder="กำหนดรหัสผ่าน (อย่างน้อย 6 ตัว)" required>
                             </div>
                         </div>
 
@@ -118,7 +102,7 @@
             </div>
             
             <div class="text-center mt-4">
-                <a href="/" class="text-white-50 text-decoration-none small">
+                <a href="/" class="text-muted text-decoration-none small">
                     <i class="bi bi-house-door me-1"></i> กลับหน้าหลัก (Home)
                 </a>
             </div>
@@ -127,5 +111,70 @@
     </div>
 </div>
 
-</body>
-</html>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const username = document.querySelector('input[name="username"]').value;
+        const email = document.querySelector('input[name="email"]').value; // เพิ่มตัวแปรเช็คอีเมล
+        const passwordInput = document.querySelector('input[name="password"]');
+
+        // 1. เช็คความยาวชื่อ (ต้อง 3 ตัวอักษรขึ้นไป)
+        if (username.length < 3 || username.length > 20) {
+            e.preventDefault(); 
+            Swal.fire({
+                icon: 'warning',
+                title: 'ชื่อผู้ใช้ไม่ถูกต้อง!',
+                text: 'กรุณากรอกชื่อผู้ใช้งานให้อยู่ระหว่าง 3 - 20 ตัวอักษรครับ',
+                confirmButtonColor: '#f39c12'
+            });
+            return;
+        }
+
+        // 2. เช็ครูปแบบอีเมล (ต้องมี @ และ .)
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'warning',
+                title: 'รูปแบบอีเมลไม่ถูกต้อง!',
+                text: 'กรุณากรอกอีเมลให้ถูกต้อง (เช่น example@mail.com)',
+                confirmButtonColor: '#f39c12'
+            });
+            return;
+        }
+
+        // 3. เช็คความยาวรหัสผ่าน (ต้อง 6 ตัวอักษรขึ้นไป)
+        if (passwordInput && passwordInput.value.length < 6) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'warning',
+                title: 'รหัสผ่านสั้นเกินไป!',
+                text: 'กรุณากำหนดรหัสผ่านอย่างน้อย 6 ตัวอักษรครับ',
+                confirmButtonColor: '#f39c12'
+            });
+            return;
+        }
+
+        // 4. ถ้ากรอกถูกหมดทุกอย่าง ให้โชว์ Loading
+        Swal.fire({
+            title: 'กำลังบันทึกข้อมูล...',
+            allowOutsideClick: false,
+            didOpen: () => { 
+                Swal.showLoading(); 
+            }
+        });
+    });
+
+    // 🚩 5. รับค่า Error จาก Controller (กรณีอีเมลหรือชื่อซ้ำกับในระบบ)
+    const serverError = "<%= locals.error || '' %>";
+    if (serverError !== "") {
+        Swal.fire({
+            icon: 'error',
+            title: 'ไม่สามารถบันทึกได้!',
+            text: serverError,
+            confirmButtonColor: '#d33'
+        });
+    }
+</script>
+
+<%- include('../partials/footer') %>

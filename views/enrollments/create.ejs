@@ -1,14 +1,16 @@
 <%- include('../partials/header') %>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden animate__animated animate__fadeInUp">
                 <div class="card-header bg-success text-white p-4 text-center">
                     <h3 class="mb-0"><i class="bi bi-plus-circle"></i> ลงทะเบียนเรียนใหม่</h3>
+                    <p class="mb-0 opacity-75 mt-2">รหัสการลงทะเบียนที่จะได้รับ: <strong><%= nextCode %></strong></p>
                 </div>
                 <div class="card-body p-5">
-                    <form action="/enrollments/create" method="POST">
+                    <form id="enrollForm" action="/enrollments/create" method="POST">
                         
                         <div class="mb-4">
                             <label class="form-label fw-bold text-secondary">เลือกสมาชิก (Member) *</label>
@@ -39,7 +41,9 @@
                         </div>
 
                         <div class="d-grid gap-3">
-                            <button type="submit" class="btn btn-success btn-lg fw-bold shadow-sm">บันทึกการลงทะเบียน</button>
+                            <button type="submit" class="btn btn-success btn-lg fw-bold shadow-sm">
+                                <i class="bi bi-save"></i> บันทึกการลงทะเบียน
+                            </button>
                             <a href="/enrollments" class="btn btn-outline-secondary py-2 fw-bold">ยกเลิก</a>
                         </div>
                     </form>
@@ -48,5 +52,31 @@
         </div>
     </div>
 </div>
+
+<script>
+    // ✨ ดักจับปุ่ม Submit เพื่อเช็คความเรียบร้อยก่อนส่ง
+    document.getElementById('enrollForm').onsubmit = function(e) {
+        // โชว์ Loading ตอนกดบันทึก
+        Swal.fire({
+            title: 'กำลังบันทึกข้อมูล...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+    };
+
+    // 🚩 รับค่า Error จาก Controller แบบที่ VS Code ไม่งง (เส้นแดงหายแน่นอน!)
+    const errorMessage = "<%= locals.error || '' %>";
+    
+    if (errorMessage !== "") {
+        Swal.fire({
+            icon: 'error',
+            title: 'เกิดข้อผิดพลาด!',
+            text: errorMessage,
+            confirmButtonColor: '#d33'
+        });
+    }
+</script>
 
 <%- include('../partials/footer') %>

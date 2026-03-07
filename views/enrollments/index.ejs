@@ -64,20 +64,20 @@
 <script>
 function confirmDelete(id, code) {
     Swal.fire({
-        title: 'ยืนยันการลบ?',
-        text: `คุณต้องการลบข้อมูลการลงทะเบียนรหัส ${code} ใช่หรือไม่!`,
+        title: 'คุณแน่ใจไหม?',
+        text: `คุณกำลังจะลบรหัสการลงทะเบียน ${code} !`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
-        cancelButtonColor: '#6c757d',
+        cancelButtonColor: '#3085d6',
         confirmButtonText: 'ใช่, ลบเลย!',
-        cancelButtonText: 'ยกเลิก',
-        reverseButtons: true
+        cancelButtonText: 'ยกเลิก'
     }).then((result) => {
         if (result.isConfirmed) {
+            // ส่งฟอร์มลบแบบเนียนๆ ไม่ต้องไปหน้าอื่น
             document.getElementById('delete-form-' + id).submit();
         }
-    });
+    })
 }
 </script>
 

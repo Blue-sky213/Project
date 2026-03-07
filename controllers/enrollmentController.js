@@ -19,25 +19,54 @@ exports.index = async (req, res) => {
 // CREATE PAGE
 // =====================
 exports.createPage = async (req, res) => {
-
-  const users = await User.findAll({
-    where: { rrole: "member" }
-  });
-
+  const users = await User.findAll({ where: { rrole: "member" } });
   const classes = await Class.findAll();
 
-  res.render("enrollments/create", { users, classes });
+  // --- ส่วนที่เพิ่ม: คำนวณรหัสถัดไปเพื่อเอาไปโชว์ในหน้า Create ---
+  const lastEnrollment = await Enrollment.findOne({ order: [['id', 'DESC']] });
+  let nextId = 1;
+  if (lastEnrollment) nextId = lastEnrollment.id + 1;
+  const nextCode = `05${String(nextId).padStart(4, '0')}`;
+
+  res.render("enrollments/create", { users, classes, nextCode }); // ส่ง nextCode ไปด้วย
 };
 
 
 // =====================
-// CREATE
+// CREATE (แก้ไขให้รันรหัสอัตโนมัติ)
 // =====================
 exports.create = async (req, res) => {
+  try {
+      // 1. ค้นหาข้อมูลการลงทะเบียนล่าสุด เพื่อเอามาทำรันนิ่งนัมเบอร์
+      const lastEnrollment = await Enrollment.findOne({
+          order: [['id', 'DESC']]
+      });
 
-  await Enrollment.create(req.body);
+      // 2. กำหนดเลขถัดไป
+      let nextId = 1;
+      if (lastEnrollment) {
+          nextId = lastEnrollment.id + 1;
+      }
 
-  res.redirect("/enrollments");
+      // 3. สร้างรหัสใหม่ เช่น 050001, 050002 (ให้ตรงกับที่เพื่อนคนที่ 4 ทำไว้ใน Seeder)
+      const generatedCode = `05${String(nextId).padStart(4, '0')}`;
+
+      // 4. เอาข้อมูลจากฟอร์ม มารวมกับรหัสที่สร้างขึ้นใหม่
+      const enrollmentData = {
+          userId: req.body.userId,
+          classId: req.body.classId,
+          status: req.body.status,
+          enrollment_code: generatedCode // 👈 ใส่รหัสที่นี่!
+      };
+
+      // 5. บันทึกลงฐานข้อมูล
+      await Enrollment.create(enrollmentData);
+
+      res.redirect("/enrollments");
+  } catch (error) {
+      console.error("Error creating enrollment:", error);
+      res.status(500).send("เกิดข้อผิดพลาดในการบันทึกข้อมูล: " + error.message);
+  }
 };
 
 

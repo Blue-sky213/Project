@@ -1,10 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FitLife Gym</title>
+    <title>FitLife Gym Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        /* ดันเนื้อหาลงมาไม่ให้ซ่อนอยู่ใต้ Navbar */
+        body { padding-top: 76px; background-color: #f0f2f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .navbar-brand { font-weight: 800; font-size: 1.5rem; letter-spacing: 1px; }
+        .nav-link { font-weight: 600; transition: 0.3s; }
+        .nav-link:hover { transform: translateY(-2px); opacity: 0.8; }
+    </style>
 </head>
 <body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand text-white" href="/">🏋️‍♂️ FitLife</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link text-warning" href="/users"><i class="bi bi-people"></i> Users</a></li>
+                    <li class="nav-item"><a class="nav-link text-success" href="/classes"><i class="bi bi-calendar-check"></i> Classes</a></li>
+                    <li class="nav-item"><a class="nav-link text-danger" href="/packages"><i class="bi bi-box-seam"></i> Packages</a></li>
+                    <li class="nav-item"><a class="nav-link" style="color: #d8b4fe;" href="/enrollments"><i class="bi bi-card-checklist"></i> Enrollments</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" style="color: #fbcfe8;" href="#" id="reportDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-bar-chart-line"></i> Reports
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                            <li><a class="dropdown-item fw-bold" href="/reports/members-in-class">รายชื่อสมาชิกในคลาส</a></li>
+                            <li><a class="dropdown-item fw-bold" href="/reports/member-schedule">ตารางเรียนของสมาชิก</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>

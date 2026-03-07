@@ -1,23 +1,13 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>รายละเอียดสมาชิก | FitLife Gym</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <style>
-        body { background-color: #f0f2f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .profile-card { border: none; border-radius: 20px; overflow: hidden; }
-        /* ปรับสี Header ให้ดูพรีเมียมขึ้น */
-        .profile-header { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 40px 20px; }
-        .info-label { color: #6c757d; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
-        .info-value { color: #212529; font-size: 1.1rem; margin-bottom: 25px; font-weight: 500; }
-        .badge-role { font-size: 0.8rem; padding: 10px 20px; border-radius: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .member-id-tag { background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 10px; font-size: 0.9rem; }
-    </style>
-</head>
-<body>
+<%- include('../partials/header') %>
+
+<style>
+    .profile-card { border: none; border-radius: 20px; overflow: hidden; }
+    .profile-header { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 40px 20px; }
+    .info-label { color: #6c757d; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+    .info-value { color: #212529; font-size: 1.1rem; margin-bottom: 25px; font-weight: 500; }
+    .badge-role { font-size: 0.8rem; padding: 10px 20px; border-radius: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    .member-id-tag { background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 10px; font-size: 0.9rem; }
+</style>
 
 <div class="container py-5">
     <div class="row justify-content-center">
@@ -80,12 +70,8 @@
                 </div>
             </div>
             
-            <p class="text-center mt-4 text-muted small">FitLife Gym Management System &copy; 2026</p>
-            
         </div>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<%- include('../partials/footer') %>

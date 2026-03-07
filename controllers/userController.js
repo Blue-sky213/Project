@@ -47,7 +47,16 @@ const userController = {
 
             res.redirect('/users');
         } catch (error) {
-            res.status(400).send("Error creating user: " + error.message);
+            // ✨ ส่วนที่อัปเกรด: ดักจับ Error ส่งกลับไปหน้าเว็บด้วยตัวแปร error
+            let errorMessage = "เกิดข้อผิดพลาดในการบันทึก";
+            
+            if (error.name === 'SequelizeUniqueConstraintError') {
+                errorMessage = "Username หรือ Email นี้มีคนใช้งานแล้วครับ!";
+            } else if (error.errors && error.errors.length > 0) {
+                errorMessage = error.errors[0].message; 
+            }
+
+            res.render('users/create', { error: errorMessage });
         }
     },
 
